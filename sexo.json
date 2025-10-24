@@ -1,0 +1,4 @@
+[
+    { "Sexo": "Masculino", "Exames": 21, "Mmg Diag Achados": 2, "Mmg Diag Categoria 3": 0, "Mmg Diag Lesao cancer": 0, "Mmg Diag Aval QT": 0, "Mmg Diag Revisao": 0, "Mmg Diag pos biopsia": 0, "Assimetria Focal": 0, "Assimetria Difusa": 0, "Distorção Focal": 0, "Area Densa": 0, "Achado Benigno": 15, "Nódulo_Resul": 2, "Microcalcificação": 1 },
+    { "Sexo": "Feminino", "Exames": 9419, "Mmg Diag Achados": 62, "Mmg Diag Categoria 3": 54, "Mmg Diag Lesao cancer": 3, "Mmg Diag Aval QT": 5, "Mmg Diag Revisao": 1, "Mmg Diag pos biopsia": 0, "Assimetria Focal": 307, "Assimetria Difusa": 19, "Distorção Focal": 23, "Area Densa": 43, "Achado Benigno": 6831, "Nódulo_Resul": 984, "Microcalcificação": 143 }
+]

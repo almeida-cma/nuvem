@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outubro Rosa - Conscientização sobre o Câncer de Mama</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --rosa-principal: #e83e8c;
+            --rosa-claro: #f8d7da;
+            --rosa-escuro: #c2185b;
+            --cinza-claro: #f8f9fa;
+            --cinza-escuro: #343a40;
+            --branco: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--cinza-claro);
+            color: var(--cinza-escuro);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--rosa-principal), var(--rosa-escuro));
+            color: var(--branco);
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+        
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            background-color: var(--branco);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 1rem;
+        }
+        
+        .logo i {
+            color: var(--rosa-principal);
+            font-size: 2.5rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        nav {
+            background-color: var(--branco);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link {
+            padding: 1rem 1.5rem;
+            text-decoration: none;
+            color: var(--cinza-escuro);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: block;
+        }
+        
+        .nav-link:hover {
+            background-color: var(--rosa-claro);
+            color: var(--rosa-escuro);
+        }
+        
+        /* Menu Hamburger */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: var(--rosa-escuro);
+            margin: 3px 0;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+        
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+        
+        section {
+            padding: 3rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--rosa-escuro);
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 3px;
+            background-color: var(--rosa-principal);
+            margin: 0.5rem auto;
+        }
+        
+        .card {
+            background-color: var(--branco);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--rosa-principal);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            color: var(--cinza-escuro);
+        }
+        
+        .chart-container {
+            height: 500px;
+            margin-bottom: 2rem;
+        }
+        
+        .data-selector {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .data-btn {
+            background-color: var(--branco);
+            border: 2px solid var(--rosa-principal);
+            color: var(--rosa-principal);
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .data-btn.active {
+            background-color: var(--rosa-principal);
+            color: var(--branco);
+        }
+        
+        .data-btn:hover:not(.active) {
+            background-color: var(--rosa-claro);
+        }
+        
+        .insight-box {
+            background-color: var(--rosa-claro);
+            border-left: 4px solid var(--rosa-principal);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .insight-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--rosa-escuro);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .info-icon {
+            background-color: var(--rosa-claro);
+            color: var(--rosa-principal);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        
+        footer {
+            background-color: var(--cinza-escuro);
+            color: var(--branco);
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .footer-link {
+            color: var(--branco);
+            text-decoration: none;
+        }
+        
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+        
+        .copyright {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .lgpd-notice {
+            background-color: var(--rosa-claro);
+            border: 2px solid var(--rosa-principal);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        .lgpd-header {
+            background-color: var(--rosa-escuro);
+            color: var(--branco);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+        
+        /* Estilos para tabelas */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .data-table th {
+            background-color: var(--rosa-claro);
+            color: var(--rosa-escuro);
+            font-weight: 600;
+        }
+        
+        .data-table tr:hover {
+            background-color: rgba(232, 62, 140, 0.05);
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+        
+        .table-title {
+            margin-bottom: 1rem;
+            color: var(--rosa-escuro);
+            text-align: center;
+        }
+        
+        .chart-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .series-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .series-checkbox {
+            display: flex;
+            align-items: center;
+            margin-right: 1rem;
+        }
+        
+        .series-checkbox input {
+            margin-right: 0.25rem;
+        }
+
+        /* Banner de Privacidade Fixo */
+        .privacy-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--rosa-escuro);
+            color: var(--branco);
+            padding: 1rem;
+            text-align: center;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .privacy-banner-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .privacy-banner-text {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+        
+        .privacy-close {
+            background: none;
+            border: 1px solid var(--branco);
+            color: var(--branco);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .privacy-close:hover {
+            background-color: var(--branco);
+            color: var(--rosa-escuro);
+        }
+        
+        /* Media Queries para Responsividade */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                left: -100%;
+                width: 100%;
+                background-color: var(--branco);
+                flex-direction: column;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+                transition: left 0.3s ease;
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .nav-link {
+                padding: 1rem;
+                border-bottom: 1px solid var(--rosa-claro);
+                text-align: center;
+            }
+            
+            .hamburger {
+                display: flex;
+            }
+            
+            .chart-container {
+                height: 400px;
+            }
+            
+            .chart-controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .privacy-banner-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .data-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .data-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .series-selector {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .logo {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .logo i {
+                font-size: 2rem;
+            }
+            
+            .stat-number {
+                font-size: 2.5rem;
+            }
+            
+            .chart-container {
+                height: 350px;
+            }
+            
+            section {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Banner de Privacidade Fixo -->
+    <div class="privacy-banner" id="privacyBanner">
+        <div class="privacy-banner-content">
+            <div class="privacy-banner-text">
+                <strong>🔒 Transparência de Dados e Privacidade:</strong> Esta página não utiliza cookies ou coleta dados pessoais dos usuários. Todos os dados apresentados são de caráter agregado e anonimizado, provenientes de fontes oficiais públicas, em conformidade com a Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018).
+            </div>
+            <button class="privacy-close" id="privacyClose">Entendi</button>
+        </div>
+    </div>
+
+    <header>
+        <div class="logo-container">
+            <div class="logo">
+                <i>🎀</i>
+            </div>
+            <div>
+                <h1>Outubro Rosa</h1>
+                <p class="subtitle">Conscientização sobre a Prevenção e Diagnóstico Precoce do Câncer de Mama</p>
+            </div>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="nav-container">
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="#sobre" class="nav-link">Sobre</a>
+                <a href="#dados" class="nav-link">Dados Epidemiológicos</a>
+                <a href="#prevencao" class="nav-link">Prevenção</a>
+                <a href="#diagnostico" class="nav-link">Diagnóstico</a>
+                <a href="#privacidade" class="nav-link">Privacidade</a>
+                <a href="#fontes" class="nav-link">Fontes</a>
+            </div>
+        </div>
+    </nav>
+    
+    <main>
+        <section id="sobre">
+            <h2 class="section-title">Sobre o Outubro Rosa</h2>
+            <div class="card">
+                <p>O Outubro Rosa é um movimento internacional de conscientização para o controle do câncer de mama, criado no início da década de 1990 pela Fundação Susan G. Komen for the Cure.</p>
+                <p>O objetivo da campanha é compartilhar informações sobre o câncer de mama, promover a conscientização sobre a doença, proporcionar maior acesso aos serviços de diagnóstico e de tratamento e contribuir para a redução da mortalidade.</p>
+                <p>No Brasil, as campanhas de conscientização sobre o câncer de mama acontecem desde 2002, mas foram instituídas por lei federal apenas em 2018. A publicidade criada pela iniciativa é dirigida à conscientização e à orientação, com foco na prevenção e no diagnóstico precoce.</p>
+                
+                <div class="grid-2" style="margin-top: 2rem;">
+                    <div class="stat-card">
+                        <div class="stat-number">59.700</div>
+                        <div class="stat-label">Casos estimados de câncer de mama no Brasil (2023)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">2ª</div>
+                        <div class="stat-label">Posição entre os tipos de câncer mais comuns em mulheres</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="dados">
+            <h2 class="section-title">Dados Epidemiológicos - Juiz de Fora/MG</h2>
+            <div class="card">
+                <p>Os dados abaixo são referentes aos exames de mamografia realizados no município de Juiz de Fora/MG no ano de 2025 (janeiro a setembro), conforme dados do Sistema de Informações de Câncer (SISCAN) do DATASUS.</p>
+                
+                <div class="data-selector">
+                    <button class="data-btn active" data-dataset="mes">Por Mês</button>
+                    <button class="data-btn" data-dataset="faixa-etaria">Por Faixa Etária</button>
+                    <button class="data-btn" data-dataset="raca">Por Raça/Cor</button>
+                    <button class="data-btn" data-dataset="sexo">Por Sexo</button>
+                </div>
+                
+                <div class="chart-controls">
+                    <div class="series-selector" id="seriesSelector">
+                        <!-- Os checkboxes serão gerados dinamicamente pelo JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="mainChart"></canvas>
+                </div>
+                
+                <div class="insight-box">
+                    <div class="insight-title">Insight Educacional</div>
+                    <p id="insight-text">Carregando análise dos dados...</p>
+                </div>
+                
+                <div class="lgpd-notice">
+                    <div class="lgpd-header">🏛️ CONFORMIDADE COM A LGPD</div>
+                    <p><strong>Esta página não utiliza cookies, não coleta e não armazena dados pessoais dos usuários.</strong></p>
+                    <p>Todos os dados apresentados são de caráter agregado e anonimizado, provenientes exclusivamente de fontes oficiais públicas (SISCAN/DATASUS), em estrita conformidade com a Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018).</p>
+                    <p>Navegue com segurança: sua privacidade é respeitada em nossa plataforma educacional.</p>
+                </div>
+                
+                <h3 class="table-title" id="tableTitle">Tabela de Dados Detalhados</h3>
+                <div class="table-container">
+                    <table class="data-table" id="dataTable">
+                        <!-- A tabela será gerada dinamicamente pelo JavaScript -->
+                    </table>
+                </div>
+            </div>
+        </section>
+        
+        <section id="prevencao">
+            <h2 class="section-title">Prevenção e Fatores de Risco</h2>
+            <div class="card">
+                <p>A prevenção do câncer de mama pode ser dividida em primária (quando se evita o aparecimento da doença) e secundária (quando se diagnostica a doença em fase inicial).</p>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-icon">🔍</div>
+                        <div>
+                            <h3>Autoexame</h3>
+                            <p>O autoexame das mamas deve ser realizado mensalmente, preferencialmente no 7º ao 10º dia após o início da menstruação.</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">👩‍⚕️</div>
+                        <div>
+                            <h3>Exame Clínico</h3>
+                            <p>O exame das mamas realizado por profissional de saúde deve ser feito anualmente a partir dos 40 anos.</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">📷</div>
+                        <div>
+                            <h3>Mamografia</h3>
+                            <p>Exame de rastreamento recomendado para mulheres entre 50 e 69 anos, a cada dois anos.</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">🥗</div>
+                        <div>
+                            <h3>Hábitos Saudáveis</h3>
+                            <p>Alimentação balanceada, prática regular de atividades físicas e controle do peso reducem o risco.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="insight-box" style="margin-top: 2rem;">
+                    <div class="insight-title">Fatores de Risco</div>
+                    <p>Os principais fatores de risco para o câncer de mama incluem: idade (acima de 50 anos), história familiar, primeira menstruação antes dos 12 anos, menopausa após os 55 anos, primeira gravidez após os 30 anos, não ter tido filhos, uso prolongado de anticoncepcionais hormonais e terapia de reposição hormonal pós-menopausa.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="diagnostico">
+            <h2 class="section-title">Diagnóstico e Tratamento</h2>
+            <div class="card">
+                <p>O diagnóstico precoce é fundamental para o sucesso do tratamento do câncer de mama. Quando identificado em estágios iniciais, a chance de cura é superior a 95%.</p>
+                
+                <h3 style="margin-top: 1.5rem; color: var(--rosa-escuro);">Métodos de Diagnóstico</h3>
+                <ul style="margin: 1rem 0 1rem 2rem;">
+                    <li>Mamografia</li>
+                    <li>Ultrassonografia mamária</li>
+                    <li>Ressonância magnética das mamas</li>
+                    <li>Biópsia (punção ou cirúrgica)</li>
+                </ul>
+                
+                <h3 style="margin-top: 1.5rem; color: var(--rosa-escuro);">Opções de Tratamento</h3>
+                <ul style="margin: 1rem 0 1rem 2rem;">
+                    <li>Cirurgia (conservadora ou mastectomia)</li>
+                    <li>Radioterapia</li>
+                    <li>Quimioterapia</li>
+                    <li>Hormonioterapia</li>
+                    <li>Terapia-alvo</li>
+                </ul>
+                
+                <div class="insight-box">
+                    <div class="insight-title">Classificação BI-RADS</div>
+                    <p>O sistema BI-RADS (Breast Imaging Reporting and Data System) é utilizado para padronizar os laudos mamográficos:</p>
+                    <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                        <li><strong>0:</strong> Exame inconclusivo - necessita de avaliação adicional</li>
+                        <li><strong>1:</strong> Exame negativo - sem alterações</li>
+                        <li><strong>2:</strong> Achados benignos - sem risco de malignidade</li>
+                        <li><strong>3:</strong> Provavelmente benigno - baixo risco, com acompanhamento em curto prazo</li>
+                        <li><strong>4:</strong> Suspeito - recomenda-se biópsia</li>
+                        <li><strong>5:</strong> Altamente suspeito de malignidade - recomenda-se biópsia</li>
+                        <li><strong>6:</strong> Lesão já confirmada como maligna por biópsia</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="privacidade">
+            <h2 class="section-title">Privacidade e Proteção de Dados</h2>
+            <div class="card">
+                <div class="lgpd-notice">
+                    <div class="lgpd-header">🔒 POLÍTICA DE PRIVACIDADE E PROTEÇÃO DE DADOS</div>
+                    <p><strong>Compromisso com a Transparência e Privacidade</strong></p>
+                    <p>Esta plataforma educacional foi desenvolvida com total compromisso com a privacidade dos usuários e em estrita conformidade com a Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018).</p>
+                    
+                    <div style="margin-top: 1.5rem;">
+                        <h3 style="color: var(--rosa-escuro); margin-bottom: 1rem;">O que você precisa saber:</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-icon">🚫</div>
+                                <div>
+                                    <h3>Sem Cookies</h3>
+                                    <p>Não utilizamos cookies de rastreamento, analytics ou qualquer tecnologia de coleta de dados pessoais.</p>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-icon">📊</div>
+                                <div>
+                                    <h3>Dados Anonimizados</h3>
+                                    <p>Todos os dados apresentados são agregados e anonimizados, provenientes de fontes oficiais públicas.</p>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-icon">🔐</div>
+                                <div>
+                                    <h3>Navegação Segura</h3>
+                                    <p>Sua visita é totalmente anônima. Não coletamos IP, localização ou qualquer informação pessoal.</p>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-icon">📚</div>
+                                <div>
+                                    <h3>Fins Educacionais</h3>
+                                    <p>Esta plataforma tem caráter exclusivamente educacional e informativo sobre saúde pública.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 1.5rem; padding: 1rem; background-color: rgba(255,255,255,0.5); border-radius: 4px;">
+                        <h3 style="color: var(--rosa-escuro); margin-bottom: 0.5rem;">Base Legal:</h3>
+                        <p>O tratamento de dados nesta plataforma fundamenta-se no <strong>Art. 7º, IV da LGPD</strong> - para o atendimento de interesse público, e no <strong>Art. 11</strong> - que dispensa consentimento para dados anonimizados.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="fontes">
+            <h2 class="section-title">Fontes e Referências</h2>
+            <div class="card">
+                <p>Esta página foi desenvolvida com base em dados oficiais e informações científicas consolidadas:</p>
+                
+                <h3 style="margin-top: 1.5rem; color: var(--rosa-escuro);">Fontes de Dados</h3>
+                <ul style="margin: 1rem 0 1rem 2rem;">
+                    <li>Sistema de Informações de Câncer (SISCAN) - Ministério da Saúde</li>
+                    <li>DATASUS - Departamento de Informática do SUS</li>
+                    <li>Instituto Nacional de Câncer (INCA)</li>
+                    <li>Sociedade Brasileira de Mastologia</li>
+                </ul>
+                
+                <h3 style="margin-top: 1.5rem; color: var(--rosa-escuro);">Referências Bibliográficas (ABNT)</h3>
+                <ul style="margin: 1rem 0 1rem 2rem;">
+                    <li>BRASIL. Ministério da Saúde. Instituto Nacional de Câncer. <strong>Diretrizes para a Detecção Precoce do Câncer de Mama no Brasil.</strong> Rio de Janeiro: INCA, 2015.</li>
+                    <li>BRASIL. Ministério da Saúde. Secretaria de Atenção à Saúde. <strong>Controle do Câncer de Mama: Documento de Consenso.</strong> Brasília: Ministério da Saúde, 2004.</li>
+                    <li>INCA. <strong>Estimativa 2023: Incidência de Câncer no Brasil.</strong> Rio de Janeiro: INCA, 2022.</li>
+                </ul>
+                
+                <div class="lgpd-notice">
+                    <strong>Desenvolvido em colaboração entre os professores da Proz Educação - Juiz de Fora</strong><br>
+                    Esta página tem caráter exclusivamente educacional e informativo. As informações apresentadas não substituem a consulta com profissionais de saúde.
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="footer-content">
+            <p>Outubro Rosa - Conscientização sobre o Câncer de Mama</p>
+            <div class="footer-links">
+                <a href="http://www.inca.gov.br" class="footer-link" target="_blank">INCA</a>
+                <a href="http://www.sbmastologia.com.br" class="footer-link" target="_blank">Sociedade Brasileira de Mastologia</a>
+                <a href="https://datasus.saude.gov.br" class="footer-link" target="_blank">DATASUS</a>
+                <a href="http://www.saude.gov.br" class="footer-link" target="_blank">Ministério da Saúde</a>
+            </div>
+            <div class="copyright">
+                &copy; 2025 Proz Educação - Juiz de Fora. Todos os direitos reservados.<br>
+                Dados atualizados em: 20/09/2025<br>
+                <strong>Conformidade LGPD: Esta plataforma não utiliza cookies nem coleta dados pessoais.</strong>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Objeto para armazenar os dados carregados dos arquivos JSON
+        let datasets = {};
+
+        // Cores e Insights permanecem os mesmos
+        const colors = [
+            '#e83e8c', '#c2185b', '#9c27b0', '#673ab7', '#3f51b5',
+            '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50',
+            '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800',
+            '#ff5722', '#795548', '#607d8b'
+        ];
+        const insights = {
+            'mes': "Os dados mostram uma variação mensal no número de exames realizados. É importante manter a regularidade nos exames ao longo de todo o ano, não apenas durante campanhas como o Outubro Rosa.",
+            'faixa-etaria': "A faixa etária com maior número de exames é entre 55-59 anos, seguida por 50-54 e 60-64 anos. Isso está alinhado com as recomendações de rastreamento para mulheres entre 50-69 anos. No entanto, observa-se um número significativo de exames em faixas etárias mais jovens, o que pode indicar avaliação de sintomas ou acompanhamento de casos de risco.",
+            'raca': "A distribuição por raça/cor mostra que a maioria dos exames foi realizada em mulheres autodeclaradas brancas, seguidas por pretas e amarelas. É importante garantir o acesso equitativo à saúde para todas as populações.",
+            'sexo': "Os dados confirmam que o câncer de mama é predominante em mulheres (a grande maioria dos exames), mas também pode ocorrer em homens, embora raramente. A conscientização sobre a doença deve incluir informações para toda a população."
+        };
+
+        /**
+         * FUNÇÃO ATUALIZADA: Carrega todos os arquivos JSON de forma assíncrona.
+         */
+        async function loadAllData() {
+            try {
+                const filesToLoad = {
+                    'mes': { path: 'mes.json', categoria: 'Mes/Ano competenc' },
+                    'faixa-etaria': { path: 'etaria.json', categoria: 'Faixa etária' },
+                    'raca': { path: 'cor.json', categoria: 'Raça/Cor' },
+                    'sexo': { path: 'sexo.json', categoria: 'Sexo' }
+                };
+
+                for (const key in filesToLoad) {
+                    const response = await fetch(filesToLoad[key].path);
+                    if (!response.ok) {
+                        throw new Error(`Erro ao carregar o arquivo ${filesToLoad[key].path}`);
+                    }
+                    const jsonData = await response.json(); // <-- A MÁGICA ACONTECE AQUI
+
+                    // Padroniza a primeira coluna para 'categoria' para uso no resto do código
+                    const standardizedData = jsonData.map(item => {
+                        const newItem = { ...item, categoria: item[filesToLoad[key].categoria] };
+                        return newItem;
+                    });
+                    
+                    datasets[key] = {
+                        categoria: filesToLoad[key].categoria,
+                        dados: standardizedData
+                    };
+                }
+                
+                console.log("Dados JSON carregados com sucesso:", datasets);
+                return true;
+
+            } catch (error) {
+                console.error("Falha ao carregar os dados JSON:", error);
+                document.getElementById('dados').innerHTML = 
+                    `<div class="card" style="text-align:center; color: red;">
+                        <h2>Erro ao Carregar os Dados</h2>
+                        <p>Não foi possível carregar os arquivos de dados (.json). Verifique se eles estão na mesma pasta que o arquivo HTML e se o formato está correto.</p>
+                    </div>`;
+                return false;
+            }
+        }
+
+        // --- O restante do código permanece praticamente idêntico ---
+        
+        let mainChart;
+        let currentDataset = 'mes';
+        let selectedSeries = ['Exames', 'Mmg Diag Achados', 'Mmg Diag Categoria 3'];
+        
+        function initChart() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            const initialConfig = getChartConfig('mes');
+            mainChart = new Chart(ctx, initialConfig);
+            document.getElementById('insight-text').textContent = insights['mes'];
+            createSeriesSelector('mes');
+            createTable('mes');
+        }
+        
+        function getChartConfig(datasetKey) {
+            const dataset = datasets[datasetKey];
+            const labels = dataset.dados.map(item => item.categoria);
+            
+            const seriesToShow = selectedSeries.filter(series => 
+                dataset.dados.some(item => item[series] !== undefined)
+            );
+            
+            const chartData = {
+                labels: labels,
+                datasets: seriesToShow.map((series, index) => ({
+                    label: series,
+                    data: dataset.dados.map(item => item[series]),
+                    borderColor: colors[index % colors.length],
+                    backgroundColor: colors[index % colors.length] + '20',
+                    tension: 0.3,
+                    fill: false,
+                    pointBackgroundColor: colors[index % colors.length],
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }))
+            };
+            
+            return {
+                type: 'line',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: getChartTitle(datasetKey), font: { size: 16 } },
+                        legend: { position: 'top' },
+                        tooltip: { mode: 'index', intersect: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Número de Casos' } },
+                        x: { ticks: { maxRotation: 45, minRotation: 0 } }
+                    },
+                    interaction: { mode: 'nearest', axis: 'x', intersect: false }
+                }
+            };
+        }
+        
+        function getChartTitle(datasetKey) {
+            const titles = {
+                'mes': 'Distribuição de Achados Radiológicos por Mês',
+                'faixa-etaria': 'Distribuição de Achados Radiológicos por Faixa Etária',
+                'raca': 'Distribuição de Achados Radiológicos por Raça/Cor',
+                'sexo': 'Distribuição de Achados Radiológicos por Sexo'
+            };
+            return titles[datasetKey];
+        }
+        
+        function createSeriesSelector(datasetKey) {
+            const selectorContainer = document.getElementById('seriesSelector');
+            selectorContainer.innerHTML = '';
+            
+            const dataset = datasets[datasetKey];
+            const availableSeries = Object.keys(dataset.dados[0]).filter(key => key !== 'categoria' && key !== dataset.categoria);
+            
+            availableSeries.forEach(series => {
+                const isChecked = selectedSeries.includes(series);
+                const checkboxId = `series-${series.replace(/\s+/g, '-')}`;
+                
+                const checkboxContainer = document.createElement('div');
+                checkboxContainer.className = 'series-checkbox';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = checkboxId;
+                checkbox.checked = isChecked;
+                checkbox.addEventListener('change', () => toggleSeries(series));
+                
+                const label = document.createElement('label');
+                label.htmlFor = checkboxId;
+                label.textContent = series;
+                
+                checkboxContainer.appendChild(checkbox);
+                checkboxContainer.appendChild(label);
+                selectorContainer.appendChild(checkboxContainer);
+            });
+        }
+        
+        function toggleSeries(series) {
+            const index = selectedSeries.indexOf(series);
+            if (index > -1) {
+                selectedSeries.splice(index, 1);
+            } else {
+                selectedSeries.push(series);
+            }
+            updateChart();
+        }
+        
+        function updateChart() {
+            mainChart.destroy();
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            const newConfig = getChartConfig(currentDataset);
+            mainChart = new Chart(ctx, newConfig);
+        }
+        
+        function createTable(datasetKey) {
+            const dataset = datasets[datasetKey];
+            const table = document.getElementById('dataTable');
+            const tableTitle = document.getElementById('tableTitle');
+            
+            tableTitle.textContent = `Tabela de Dados - ${dataset.categoria}`;
+            
+            const columns = Object.keys(dataset.dados[0]).filter(key => key !== 'categoria' && key !== dataset.categoria);
+            let headerHTML = `<tr><th>${dataset.categoria}</th>`;
+            columns.forEach(col => { headerHTML += `<th>${col}</th>`; });
+            headerHTML += '</tr>';
+            
+            let bodyHTML = '';
+            dataset.dados.forEach(item => {
+                bodyHTML += `<tr><td>${item.categoria}</td>`;
+                columns.forEach(col => { bodyHTML += `<td>${item[col]}</td>`; });
+                bodyHTML += '</tr>';
+            });
+            
+            const totals = {};
+            columns.forEach(col => {
+                totals[col] = dataset.dados.reduce((sum, item) => sum + (item[col] || 0), 0);
+            });
+            
+            bodyHTML += `<tr style="font-weight: bold; background-color: #f8d7da;"><td>Total</td>`;
+            columns.forEach(col => { bodyHTML += `<td>${totals[col]}</td>`; });
+            bodyHTML += '</tr>';
+            
+            table.innerHTML = headerHTML + bodyHTML;
+        }
+        
+        // Event listeners (adaptados para carregar dados primeiro)
+        document.addEventListener('DOMContentLoaded', async function() {
+            const dataLoaded = await loadAllData();
+            
+            if (dataLoaded) {
+                initChart();
+                const dataButtons = document.querySelectorAll('.data-btn');
+                dataButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        dataButtons.forEach(btn => btn.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        currentDataset = this.getAttribute('data-dataset');
+                        selectedSeries = ['Exames', 'Mmg Diag Achados', 'Mmg Diag Categoria 3'];
+                        
+                        updateChart();
+                        createSeriesSelector(currentDataset);
+                        createTable(currentDataset);
+                        document.getElementById('insight-text').textContent = insights[currentDataset];
+                    });
+                });
+            }
+            
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('navLinks');
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    navLinks.classList.remove('active');
+                });
+            });
+
+            document.getElementById('privacyClose').addEventListener('click', () => {
+                document.getElementById('privacyBanner').style.display = 'none';
+            });
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetElement = document.querySelector(this.getAttribute('href'));
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
